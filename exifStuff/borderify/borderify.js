@@ -2,7 +2,7 @@
 
 (function () {
 
-  var debug = false;
+  var debug = true;
 
   var root = this;
 
@@ -1061,31 +1061,29 @@
 
 
 
-
-
-document.body.style.border = "5px solid blue";
+document.body.style.border = "5px solid cyan";
 
 document.body.addEventListener("click", notifyExtension);
 
-function toDataUrl(url, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function () {
-    var reader = new FileReader();
-    reader.onloadend = function () {
-      callback(reader.result);
-    }
-    reader.readAsDataURL(xhr.response);
-  };
-  xhr.open('GET', url);
-  xhr.responseType = 'blob';
-  xhr.send();
-}
 
-var x;
+// function toDataUrl(url) {
+//   var xhr = new XMLHttpRequest();
+//   xhr.onload = function () {
+//     var reader = new FileReader();
+//     reader.onloadend = function () {
+//       // console.log(reader.result);
+//       // callback(reader.result);
+//       x = reader.result;
+//       console.log(x);
+//       // return reader.result;
+//     }
+//     reader.readAsDataURL(xhr.response);
+//   };
+//   xhr.open('GET', url);
+//   xhr.responseType = 'blob';
+//   xhr.send();
+// }
 
-function setX(xVal) {
-  x = xVal;
-}
 
 function notifyExtension(e) {
   if (e.target.tagName != "IMG") {
@@ -1094,25 +1092,46 @@ function notifyExtension(e) {
   }
   console.log("This is a picture. Awesome.");
   // console.log(e.target.src);
+  // const x = toDataUrl(e.target.src);
   
-  try {
-    toDataUrl(e.target.src, setX);
-    // console.log(x);
-  } catch (error) {
-    console.log("Hmm.. could not get the base64 :/.");
-  }
 
 
-  var image = new Image();
+
+ 
+  
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function () {
+    var reader = new FileReader();
+    reader.onloadend = function () {
+      x = reader.result;
+      // console.log(x);
+    }
+    reader.readAsDataURL(xhr.response);
+  };
+  xhr.open('GET', e.target.src);
+  xhr.responseType = 'blob';
+  xhr.send();
+  
+  // console.log("x1 = " + x);
+
+
+  let image = new Image();
+  
   image.onload = function() {
       EXIF.getData(image, function() {
-          console.log(EXIF.pretty(this));
+          alert("1");
+          alert(EXIF.pretty(this));
+          alert("2");
       });
   };
-  console.log(x);
-  img.src = x;
-
-
+  image.src = x;
+  alert("sgljdsflk")
+  EXIF.getData(image, function() {
+    alert("1");
+    alert(EXIF.pretty(this));
+    alert("2");
+  });
+  
 
 }
 
